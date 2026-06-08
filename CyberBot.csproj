@@ -8,4 +8,11 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove=".gitignore\**" />
+    <EmbeddedResource Remove=".gitignore\**" />
+    <None Remove=".gitignore\**" />
+    <Page Remove=".gitignore\**" />
+  </ItemGroup>
+
 </Project>
