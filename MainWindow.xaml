@@ -49,7 +49,7 @@
 
                 <Image x:Name="logo" Source="/logo.png"
                        Width="804"
-                       Height="301"
+                       Height="175"
                        Margin="0,0,0,10" Stretch="Fill"/>
 
                 <TextBlock
@@ -57,13 +57,13 @@
                     FontSize="30"
                     FontWeight="Bold"
                     Foreground="#4FC3F7"
-                    HorizontalAlignment="Center" Height="35"/>
+                    HorizontalAlignment="Center" Height="30" RenderTransformOrigin="0.515,0.557"/>
 
                 <TextBlock
                     Text="AI Cybersecurity Awareness Assistant"
                     FontSize="16"
                     Foreground="White"
-                    HorizontalAlignment="Center" Height="30"/>
+                    HorizontalAlignment="Center" Height="19"/>
 
             </StackPanel>
 

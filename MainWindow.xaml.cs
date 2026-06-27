@@ -252,14 +252,12 @@ namespace CyberBot
         Hello {userName}!
 
         It's great to meet you.
-
-        You can ask me about:
-        • Password Security • Phishing • Malware • Ransomware • VPN • Firewall• Safe Browsing 
-        • Public Wi-Fi • Email Security • Encryption • Identity Theft • Cloud Security
-
-        Or simply type your own cybersecurity question.
-
-        ------------------------------------------------------------
+        
+                    AVAILABLE CYBERSECURITY TOPICS                             
+      🔐 Passwords       🛡 Firewall        🌐 VPN             📧 Email Security 
+      🎣 Phishing        🦠 Antivirus       🔒 Encryption      ☁ Cloud Security  
+      💀 Malware         🛑 Ransomware      📶 Public Wi-Fi    👤 Identity Theft 
+      🌍 Safe Browsing   🎭 Social Eng.     🔑 Privacy         ⚠ Scams          
 
 ");
 
