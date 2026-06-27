@@ -6,7 +6,7 @@ CyberSecurityBot is a C# console application that simulates a basic chatbot focu
 
 ---
 
-## ⚙️ Features (Version 1.2)
+## ⚙️ Features (Version 2)
 
 * ASCII art welcome screen
 * Audio greeting using `.wav` file
