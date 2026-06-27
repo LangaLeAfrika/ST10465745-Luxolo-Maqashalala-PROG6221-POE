@@ -14,6 +14,7 @@ namespace CyberBot
         //=========================================================
 
         private readonly ChatBot bot = new ChatBot();
+        private readonly TaskManager taskManager = new TaskManager();
 
         //=========================================================
         // User Information
@@ -91,6 +92,7 @@ namespace CyberBot
             DisplayWelcome();
 
             AskUserName();
+            LoadTasks();
         }
 
         //=========================================================
@@ -151,21 +153,11 @@ namespace CyberBot
                 Your AI Cybersecurity Awareness Assistant.
 
                 I can help you learn about:
-
-                • Password Security
-                • Phishing
-                • Malware
-                • Ransomware
-                • Safe Browsing
-                • VPN
-                • Encryption
-                • Firewall
-                • Email Security
-                • Identity Theft
-                • Cloud Security
-                • Social Engineering
-
-                ------------------------------------------------------------
+                           
+      🔐 Passwords       🛡 Firewall        🌐 VPN             📧 Email Security 
+      🎣 Phishing        🦠 Antivirus       🔒 Encryption      ☁ Cloud Security  
+      💀 Malware         🛑 Ransomware      📶 Public Wi-Fi    👤 Identity Theft 
+      🌍 Safe Browsing   🎭 Social Eng.     🔑 Privacy         ⚠ Scams          
 
 ");
         }
@@ -252,8 +244,11 @@ namespace CyberBot
         Hello {userName}!
 
         It's great to meet you.
-        
-                    AVAILABLE CYBERSECURITY TOPICS                             
+
+        What can I assist you with today:
+
+            AVAILABLE CYBERSECURITY TOPICS   
+
       🔐 Passwords       🛡 Firewall        🌐 VPN             📧 Email Security 
       🎣 Phishing        🦠 Antivirus       🔒 Encryption      ☁ Cloud Security  
       💀 Malware         🛑 Ransomware      📶 Public Wi-Fi    👤 Identity Theft 
@@ -380,6 +375,81 @@ namespace CyberBot
             {
                 Application.Current.Shutdown();
             }
+        }
+        private void LoadTasks()
+        {
+            TaskList.Items.Clear();
+
+            foreach (CyberTask task in taskManager.GetAllTasks())
+            {
+                TaskList.Items.Add(task);
+            }
+        }
+        private void AddTask_Click(object sender, RoutedEventArgs e)
+        {
+            string title = TaskTitleBox.Text.Trim();
+            string description = TaskDescriptionBox.Text.Trim();
+            string reminder = ReminderBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                MessageBox.Show(
+                    "Please enter a task title.",
+                    "Missing Information",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
+            string result =
+                taskManager.AddTask(title, description, reminder);
+
+            MessageBox.Show(result);
+
+            TaskTitleBox.Clear();
+            TaskDescriptionBox.Clear();
+            ReminderBox.Clear();
+
+            LoadTasks();
+        }
+        private void CompleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            if (TaskList.SelectedItem == null)
+            {
+                MessageBox.Show("Please select a task.");
+
+                return;
+            }
+
+            CyberTask selectedTask =
+                (CyberTask)TaskList.SelectedItem;
+
+            MessageBox.Show(
+                taskManager.MarkAsComplete(selectedTask.Id));
+
+            LoadTasks();
+        }
+        private void DeleteTask_Click(object sender, RoutedEventArgs e)
+        {
+            if (TaskList.SelectedItem == null)
+            {
+                MessageBox.Show("Please select a task.");
+
+                return;
+            }
+
+            CyberTask selectedTask =
+                (CyberTask)TaskList.SelectedItem;
+
+            MessageBox.Show(
+                taskManager.DeleteTask(selectedTask.Id));
+
+            LoadTasks();
+        }
+        private void RefreshTasks_Click(object sender, RoutedEventArgs e)
+        {
+            LoadTasks();
         }
     }
 }

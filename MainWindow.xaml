@@ -26,59 +26,84 @@
 
     <Grid Margin="15">
 
-        <Grid.RowDefinitions>
+        <TabControl
+        x:Name="MainTabs"
+        FontSize="15">
 
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <!-- ========================= -->
+            <!-- TAB 1 : CYBERSHIELD -->
+            <!-- ========================= -->
 
-        </Grid.RowDefinitions>
+            <TabItem Header="💬 CyberShield Assistant">
 
-        <!-- ========================= -->
-        <!-- HEADER -->
-        <!-- ========================= -->
+                <!--
+                Move your CURRENT chatbot interface here.
 
-        <Border Grid.Row="0"
+                Everything you already have goes inside this Grid:
+                • Logo
+                • ChatDisplay
+                • UserInput
+                • Send Button
+                • Clear Button
+                • Exit Button
+            -->
+
+                <Grid x:Name="ChatTabGrid">
+                    <Grid Margin="15">
+
+                        <Grid.RowDefinitions>
+
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+
+                        </Grid.RowDefinitions>
+
+                        <!-- ========================= -->
+                        <!-- HEADER -->
+                        <!-- ========================= -->
+
+                        <Border Grid.Row="0"
                 Background="#16213E"
                 CornerRadius="15"
                 Padding="20"
                 Margin="0,0,0,10">
 
-            <StackPanel HorizontalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center">
 
-                <Image x:Name="logo" Source="/logo.png"
+                                <Image x:Name="logo" Source="/logo.png"
                        Width="804"
                        Height="175"
                        Margin="0,0,0,10" Stretch="Fill"/>
 
-                <TextBlock
+                                <TextBlock
                     Text="CYBERSHIELD ASSISTANT"
                     FontSize="30"
                     FontWeight="Bold"
                     Foreground="#4FC3F7"
                     HorizontalAlignment="Center" Height="30" RenderTransformOrigin="0.515,0.557"/>
 
-                <TextBlock
+                                <TextBlock
                     Text="AI Cybersecurity Awareness Assistant"
                     FontSize="16"
                     Foreground="White"
                     HorizontalAlignment="Center" Height="19"/>
 
-            </StackPanel>
+                            </StackPanel>
 
-        </Border>
+                        </Border>
 
-        <!-- ========================= -->
-        <!-- CHAT AREA -->
-        <!-- ========================= -->
+                        <!-- ========================= -->
+                        <!-- CHAT AREA -->
+                        <!-- ========================= -->
 
-        <Border Grid.Row="1"
+                        <Border Grid.Row="1"
                 CornerRadius="15"
                 Background="#1B263B"
                 Padding="10">
 
-            <TextBox
+                            <TextBox
                 x:Name="ChatDisplay"
                 Background="#1B263B"
                 Foreground="White"
@@ -90,28 +115,28 @@
                 AcceptsReturn="True"
                 IsReadOnly="True"/>
 
-        </Border>
+                        </Border>
 
-        <!-- ========================= -->
-        <!-- INPUT -->
-        <!-- ========================= -->
+                        <!-- ========================= -->
+                        <!-- INPUT -->
+                        <!-- ========================= -->
 
-        <Grid Grid.Row="2"
+                        <Grid Grid.Row="2"
               Margin="0,15,0,10">
 
-            <Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
 
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="140"/>
 
-            </Grid.ColumnDefinitions>
+                            </Grid.ColumnDefinitions>
 
-            <Border
+                            <Border
                 Grid.Column="0"
                 Background="#243B55"
                 CornerRadius="10">
 
-                <TextBox
+                                <TextBox
                     x:Name="UserInput"
                     FontSize="15"
                     Foreground="White"
@@ -119,38 +144,38 @@
                     BorderThickness="0"
                     Padding="10"/>
 
-            </Border>
+                            </Border>
 
-            <Button
+                            <Button
                 x:Name="SendButton"
                 Grid.Column="1"
                 Content="SEND"
                 Click="SendButton_Click"/>
 
-        </Grid>
+                        </Grid>
 
-        <!-- ========================= -->
-        <!-- FOOTER -->
-        <!-- ========================= -->
+                        <!-- ========================= -->
+                        <!-- FOOTER -->
+                        <!-- ========================= -->
 
-        <Grid Grid.Row="3">
+                        <Grid Grid.Row="3">
 
-            <Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
 
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
 
-            </Grid.ColumnDefinitions>
+                            </Grid.ColumnDefinitions>
 
-            <Button
+                            <Button
                 x:Name="ClearButton"
                 Grid.Column="0"
                 Width="120"
                 Content="Clear Chat"
                 Click="ClearButton_Click"/>
 
-            <TextBlock
+                            <TextBlock
                 Grid.Column="1"
                 Text="🟢 CyberShield Ready"
                 Foreground="Lime"
@@ -159,14 +184,216 @@
                 FontWeight="Bold"
                 FontSize="14"/>
 
-            <Button
+                            <Button
                 x:Name="ExitButton"
                 Grid.Column="2"
                 Width="100"
                 Content="Exit"
                 Click="ExitButton_Click"/>
 
-        </Grid>
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+
+            </TabItem>
+
+            <!-- ========================= -->
+            <!-- TAB 2 : TASK ASSISTANT -->
+            <!-- ========================= -->
+
+            <!-- ========================= -->
+            <!-- TAB 2 : TASK ASSISTANT -->
+            <!-- ========================= -->
+
+            <TabItem Header="📋 Task Assistant">
+
+                <Grid Margin="20">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ========================= -->
+                    <!-- TITLE -->
+                    <!-- ========================= -->
+
+                    <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Text="Task Title:"
+            FontWeight="Bold"
+            FontSize="15"
+            Foreground="White"
+            VerticalAlignment="Center"/>
+
+                    <TextBox
+            x:Name="TaskTitleBox"
+            Grid.Row="0"
+            Grid.Column="1"
+            Height="35"
+            Margin="10,5"/>
+
+                    <!-- ========================= -->
+                    <!-- DESCRIPTION -->
+                    <!-- ========================= -->
+
+                    <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Text="Description:"
+            FontWeight="Bold"
+            FontSize="15"
+            Foreground="White"
+            VerticalAlignment="Center"/>
+
+                    <TextBox
+            x:Name="TaskDescriptionBox"
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="70"
+            Margin="10,5"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"/>
+
+                    <!-- ========================= -->
+                    <!-- REMINDER -->
+                    <!-- ========================= -->
+
+                    <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Text="Reminder:"
+            FontWeight="Bold"
+            FontSize="15"
+            Foreground="White"
+            VerticalAlignment="Center"/>
+
+                    <TextBox
+            x:Name="ReminderBox"
+            Grid.Row="2"
+            Grid.Column="1"
+            Height="35"
+            Margin="10,5"
+            ToolTip="Example: Remind me in 5 days"/>
+
+                    <!-- ========================= -->
+                    <!-- ADD BUTTON -->
+                    <!-- ========================= -->
+
+                    <Button
+            x:Name="AddTaskButton"
+            Grid.Row="3"
+            Grid.ColumnSpan="2"
+            Width="180"
+            Height="40"
+            Margin="0,15"
+            HorizontalAlignment="Center"
+            Content="➕ Add Task"
+            Click="AddTask_Click"/>
+
+                    <!-- ========================= -->
+                    <!-- TASK LIST -->
+                    <!-- ========================= -->
+
+                    <ListBox
+            x:Name="TaskList"
+            Grid.Row="4"
+            Grid.ColumnSpan="2"
+            Margin="0,15"
+            FontFamily="Consolas"
+            FontSize="14"/>
+
+                    <!-- ========================= -->
+                    <!-- ACTION BUTTONS -->
+                    <!-- ========================= -->
+
+                    <StackPanel
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            Margin="0,15">
+
+                        <Button
+                x:Name="CompleteTaskButton"
+                Width="180"
+                Height="40"
+                Margin="5"
+                Content="✅ Mark Complete"
+                Click="CompleteTask_Click"/>
+
+                        <Button
+                x:Name="DeleteTaskButton"
+                Width="150"
+                Height="40"
+                Margin="5"
+                Content="🗑 Delete Task"
+                Click="DeleteTask_Click"/>
+
+                        <Button
+                x:Name="RefreshTaskButton"
+                Width="140"
+                Height="40"
+                Margin="5"
+                Content="🔄 Refresh"
+                Click="RefreshTasks_Click"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </TabItem>
+
+            <!-- ========================= -->
+            <!-- TAB 3 : QUIZ -->
+            <!-- ========================= -->
+
+            <TabItem Header="🎮 Cybersecurity Quiz">
+
+                <Grid>
+
+                    <TextBlock
+                    Text="Quiz coming soon..."
+                    FontSize="24"
+                    FontWeight="Bold"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+
+                </Grid>
+
+            </TabItem>
+
+            <!-- ========================= -->
+            <!-- TAB 4 : ACTIVITY LOG -->
+            <!-- ========================= -->
+
+            <TabItem Header="📊 Activity Log">
+
+                <Grid>
+
+                    <TextBlock
+                    Text="Activity Log coming soon..."
+                    FontSize="24"
+                    FontWeight="Bold"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+
+                </Grid>
+
+            </TabItem>
+
+        </TabControl>
 
     </Grid>
 

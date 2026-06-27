@@ -383,12 +383,95 @@ private readonly Dictionary<string, List<string>> responses =
         }
     }
 };
+        // ============================
+        // NLP Intent Detection
+        // ============================
 
-// ============================================
-// Returns a random response for a topic
-// ============================================
+     private readonly Dictionary<string, List<string>> intentKeywords =
+            new Dictionary<string, List<string>>
+        {
+    {
+        "addtask",
+        new List<string>
+        {
+            "add task",
+            "add a task",
+            "create task",
+            "new task",
+            "i need to",
+            "remember to",
+            "set up",
+            "enable"
+        }
+    },
 
-public string GetResponse(string input)
+    {
+        "reminder",
+        new List<string>
+        {
+            "remind me",
+            "set reminder",
+            "set a reminder",
+            "don't forget",
+            "reminder",
+            "remind me to"
+        }
+    },
+
+    {
+        "quiz",
+        new List<string>
+        {
+            "start quiz",
+            "quiz",
+            "take quiz",
+            "quiz me",
+            "test my knowledge",
+            "play the game"
+        }
+    },
+
+    {
+        "activitylog",
+        new List<string>
+        {
+            "show activity log",
+            "activity log",
+            "show log",
+            "recent actions",
+            "what have you done",
+            "what did you do",
+            "show more"
+        }
+    }
+        };
+        // ============================
+        // Detect Intent
+        // ============================
+
+        public string DetectIntent(string input)
+        {
+            input = input.ToLower();
+
+            foreach (var intent in intentKeywords)
+            {
+                foreach (string phrase in intent.Value)
+                {
+                    if (input.Contains(phrase))
+                    {
+                        return intent.Key;
+                    }
+                }
+            }
+
+            return "";
+        }
+
+        // ============================================
+        // Returns a random response for a topic
+        // ============================================
+
+        public string GetResponse(string input)
 {
     input = input.ToLower();
 
