@@ -250,6 +250,9 @@ Developed as part of the **PROG6221 POE**.
 
 ---
 
-<img width="800" height="800" alt="image" src="https://github.com/user-attachments/assets/d26d79ce-464b-4880-a190-f02920b8ba69" />
+<img width="1919" height="1197" alt="image" src="https://github.com/user-attachments/assets/8a3d4afb-0c98-49dd-b5e3-76c6af0738c2" />
+<img width="1912" height="1031" alt="image" src="https://github.com/user-attachments/assets/e5f767cf-e155-4e78-823c-fc9317fb88cb" />
+
+
 
 
