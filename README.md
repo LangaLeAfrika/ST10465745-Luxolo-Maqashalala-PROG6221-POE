@@ -189,6 +189,22 @@ CyberSecurityChatbot/
 ├── activity_log.txt
 └── type.wav
 ```
+## 📊 Version Comparison Table
+
+| Feature / Functionality | Version 1              | Version 2                     | Version 3 (Current)                    |
+| ----------------------- | ---------------------- | ----------------------------- | -------------------------------------- |
+| User Interface          | Console-based          | WPF                           | WPF Graphical User Interface           |
+| Chatbot Responses       | Basic keyword matching | Improved structured responses | Interactive and formatted responses    |
+| Cybersecurity Awareness | Basic topics           | Expanded topics               | Fully integrated with quiz system      |
+| Task Management         | Not included           | Add and view tasks            | Full task system with persistence      |
+| Data Storage            | None                   | JSON storage (tasks.json)     | JSON + logging system                  |
+| File Handling           | Not implemented        | Read/write JSON files         | JSON + activity log file               |
+| Quiz System             | Not included           | Not included                  | Full quiz with scoring and feedback    |
+| Score Tracking          | Not included           | Not included                  | Implemented                            |
+| Activity Logging        | Not included           | Not included                  | Logs user actions to file              |
+| Error Handling          | Minimal                | Basic                         | Robust (try-catch implemented)         |
+| Code Structure          | Basic classes          | Improved modular structure    | Fully modular and scalable             |
+| User Experience         | Simple interaction     | Improved functionality        | Interactive, responsive, user-friendly |
 
 ---
 
