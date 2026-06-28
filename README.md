@@ -1,7 +1,7 @@
 # CyberSecurityBot 🤖
 
 ## 📌 Project Overview
-# Cybersecurity Awareness Chatbot Version 3
+# Cybersecurity Awareness Chatbot Version 3.0
 
 YouTube: https://youtu.be/Quh5d7rg6-M
 ---
@@ -192,7 +192,7 @@ CyberSecurityChatbot/
 
 ---
 
-## ✅ Part 3 Requirements Covered
+## ✅ Version 3.0 Requirements Covered
 
 ✔ Chatbot interaction
 ✔ Quiz implementation
