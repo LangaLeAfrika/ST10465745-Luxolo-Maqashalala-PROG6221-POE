@@ -1,7 +1,7 @@
 # CyberSecurityBot 🤖
 
 ## 📌 Project Overview
-# Cybersecurity Awareness Chatbot (V3)
+# Cybersecurity Awareness Chatbot Version 3
 
 YouTube: https://youtu.be/Quh5d7rg6-M
 ---
