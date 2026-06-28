@@ -237,7 +237,3 @@ Developed as part of the **PROG6221 POE**.
 <img width="800" height="800" alt="image" src="https://github.com/user-attachments/assets/d26d79ce-464b-4880-a190-f02920b8ba69" />
 
 
-
->>>>>>> 15d7479ec6340e94d25c85b9f4c7831f1b083742
-
-
