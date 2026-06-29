@@ -15,6 +15,7 @@ namespace CyberBot
 
         private readonly ChatBot bot = new ChatBot();
         private readonly TaskManager taskManager = new TaskManager();
+        private ActivityLogger logger = new ActivityLogger();
 
         //=========================================================
         // User Information
@@ -261,12 +262,44 @@ namespace CyberBot
 
                 return;
             }
+            //-----------------------------------------------------
+            // Normal Chat Flow (AFTER name is set)
+            //-----------------------------------------------------
+
+            // 🔹 Show user message
+            ChatDisplay.AppendText(
+            $@"[{DateTime.Now:HH:mm}] 👤 {userName}: {message}
+
+");
+
+            // 🔹 LOG user message
+            logger.Log($"[{userName}] said: {message}");
+
+            // 🔹 Get bot reply
+            string reply = bot.GetReply(message);
+
+            // 🔹 Small delay for realism
+            await Task.Delay(200);
+
+            // 🔹 Show bot reply
+            ChatDisplay.AppendText(
+            $@"[{DateTime.Now:HH:mm}] 🤖 CyberShield: {reply}
+
+------------------------------------------------------------
+
+");
+
+            // 🔹 LOG bot reply
+            logger.Log($"Bot replied: {reply}");
+
+            // 🔹 Auto scroll
+            ChatDisplay.ScrollToEnd();
 
             //-----------------------------------------------------
             // Display User Message
             //-----------------------------------------------------
 
-                        ChatDisplay.AppendText(
+            ChatDisplay.AppendText(
             $@"[{DateTime.Now:HH:mm}] 👤 {userName}
 
             {message}
@@ -308,7 +341,41 @@ namespace CyberBot
                         typingIndex,
                         ChatDisplay.Text.Length - typingIndex);
             }
+            
+            // 🔹 NLP Task Detection
+            if (message.ToLower().Contains("add task") ||
+                message.ToLower().Contains("remind me") ||
+                message.ToLower().Contains("i need to"))
+            {
+                string taskTitle = message
+                    .Replace("add task", "", StringComparison.OrdinalIgnoreCase)
+                    .Replace("remind me to", "", StringComparison.OrdinalIgnoreCase)
+                    .Replace("i need to", "", StringComparison.OrdinalIgnoreCase)
+                    .Trim();
 
+                if (!string.IsNullOrWhiteSpace(taskTitle))
+                {
+                    taskManager.AddTask(taskTitle);
+
+                    // Refresh UI list
+                    RefreshTaskList();
+
+                    // Log it
+                    logger.Log($"Task created from chat: {taskTitle}");
+
+                    ChatDisplay.AppendText(
+            $@"[{DateTime.Now:HH:mm}] 🤖 CyberShield:
+
+✅ Task added: {taskTitle}
+
+------------------------------------------------------------
+
+");
+
+                    ChatDisplay.ScrollToEnd();
+                    return;
+                }
+            }
             //-----------------------------------------------------
             // Get ChatBot Response
             //-----------------------------------------------------
@@ -447,9 +514,10 @@ namespace CyberBot
 
             LoadTasks();
         }
-        private void RefreshTasks_Click(object sender, RoutedEventArgs e)
+        private void RefreshTaskList()
         {
-            LoadTasks();
+            TaskListBox.ItemsSource = null;
+            TaskListBox.ItemsSource = taskManager.GetTasks();
         }
     }
 }

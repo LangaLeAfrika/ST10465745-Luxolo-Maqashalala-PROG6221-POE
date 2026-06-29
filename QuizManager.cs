@@ -27,6 +27,8 @@ namespace CyberBot
             score = 0;
 
             LoadQuestions();
+
+            AddRemainingQuestions();
         }
 
         // ============================
