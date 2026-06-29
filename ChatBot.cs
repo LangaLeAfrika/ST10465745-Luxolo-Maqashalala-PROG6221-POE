@@ -46,7 +46,7 @@ namespace CyberBot
                 string name = input.Substring(10).Trim();
 
                 memory.UserName = name;
-
+             
                 ActivityLogger.Log($"User identified as {name}");
 
                 return $"Nice to meet you, {name}!";

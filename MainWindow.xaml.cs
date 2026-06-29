@@ -3,7 +3,9 @@ using System.IO;
 using System.Media;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace CyberBot
 {
@@ -15,7 +17,8 @@ namespace CyberBot
 
         private readonly ChatBot bot = new ChatBot();
         private readonly TaskManager taskManager = new TaskManager();
-        private ActivityLogger logger = new ActivityLogger();
+        private QuizManager quizManager = new QuizManager();
+        private string selectedAnswer = "";
 
         //=========================================================
         // User Information
@@ -32,22 +35,24 @@ namespace CyberBot
         {
             InitializeComponent();
 
-            Loaded += MainWindow_Loaded;
-
-            UserInput.KeyDown += UserInput_KeyDown;
+            LoadQuestion();// 🔥 THIS loads the first question
         }
+            private void RefreshTasks()
+            {
+                TaskList.ItemsSource = null;
+                TaskList.ItemsSource = taskManager.GetAllTasks();
+            }
 
         //=========================================================
         // Window Loaded
         //=========================================================
-
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             UserInput.Focus();
 
             await StartupSequence();
+            RefreshTasks();
         }
-
         //=========================================================
         // Startup Sequence
         //=========================================================
@@ -195,7 +200,37 @@ namespace CyberBot
                 SendMessage();
             }
         }
+        //=========================================================
+        // Load Questions
+        //=========================================================
+        private void LoadQuestion()
+        {
+            var question = quizManager.GetCurrentQuestion();
 
+            if (question == null)
+                return;
+
+            QuestionText.Text = question.Question;
+            OptionsPanel.Children.Clear();
+
+            foreach (var option in question.Options)
+            {
+                RadioButton rb = new RadioButton
+                {
+                    Content = option,
+                    FontSize = 16,
+                    Foreground = Brushes.White,
+                    Margin = new Thickness(5)
+                };
+
+                rb.Checked += (s, e) =>
+                {
+                    selectedAnswer = option.Substring(0, 1);
+                };
+
+                OptionsPanel.Children.Add(rb);
+            }
+        }
         //=========================================================
         // Send Button
         //=========================================================
@@ -214,6 +249,7 @@ namespace CyberBot
 
             if (string.IsNullOrWhiteSpace(message))
                 return;
+            ActivityLogger.Log($"User asked: {message}");
 
             UserInput.Clear();
 
@@ -273,7 +309,7 @@ namespace CyberBot
 ");
 
             // 🔹 LOG user message
-            logger.Log($"[{userName}] said: {message}");
+            ActivityLogger.Log($"[{userName}] said: {message}");
 
             // 🔹 Get bot reply
             string reply = bot.GetReply(message);
@@ -290,7 +326,7 @@ namespace CyberBot
 ");
 
             // 🔹 LOG bot reply
-            logger.Log($"Bot replied: {reply}");
+            ActivityLogger.Log($"Bot replied: {reply}");
 
             // 🔹 Auto scroll
             ChatDisplay.ScrollToEnd();
@@ -355,23 +391,16 @@ namespace CyberBot
 
                 if (!string.IsNullOrWhiteSpace(taskTitle))
                 {
-                    taskManager.AddTask(taskTitle);
+                    taskManager.AddTask(
+                        taskTitle,
+                        "Created from chat",
+                        "");
 
                     // Refresh UI list
-                    RefreshTaskList();
+                    RefreshTasks();
 
                     // Log it
-                    logger.Log($"Task created from chat: {taskTitle}");
-
-                    ChatDisplay.AppendText(
-            $@"[{DateTime.Now:HH:mm}] 🤖 CyberShield:
-
-✅ Task added: {taskTitle}
-
-------------------------------------------------------------
-
-");
-
+                    ActivityLogger.Log($"Task created from chat: {taskTitle}");
                     ChatDisplay.ScrollToEnd();
                     return;
                 }
@@ -379,25 +408,10 @@ namespace CyberBot
             //-----------------------------------------------------
             // Get ChatBot Response
             //-----------------------------------------------------
-
-            string reply = bot.GetReply(message);
-
-            //-----------------------------------------------------
-            // Display Bot Reply
-            //-----------------------------------------------------
-
-            ChatDisplay.AppendText(
-            $@"[{DateTime.Now:HH:mm}] 🤖 CyberShield
-
-            {reply}
-
-            ------------------------------------------------------------
-
-");
-
+  ActivityLogger.Log("Bot responded to user");
             ChatDisplay.ScrollToEnd();
 
-            UserInput.Focus();
+             UserInput.Focus();
         }
         //=========================================================
         // Clear Chat
@@ -445,12 +459,7 @@ namespace CyberBot
         }
         private void LoadTasks()
         {
-            TaskList.Items.Clear();
-
-            foreach (CyberTask task in taskManager.GetAllTasks())
-            {
-                TaskList.Items.Add(task);
-            }
+            TaskList.ItemsSource = taskManager.GetAllTasks();
         }
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
@@ -460,17 +469,14 @@ namespace CyberBot
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                MessageBox.Show(
-                    "Please enter a task title.",
-                    "Missing Information",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-
+                MessageBox.Show("Please enter a task title.");
                 return;
             }
 
-            string result =
-                taskManager.AddTask(title, description, reminder);
+            string result = taskManager.AddTask(
+                title,
+                description,
+                reminder);
 
             MessageBox.Show(result);
 
@@ -478,46 +484,75 @@ namespace CyberBot
             TaskDescriptionBox.Clear();
             ReminderBox.Clear();
 
-            LoadTasks();
+            RefreshTasks();
         }
         private void CompleteTask_Click(object sender, RoutedEventArgs e)
         {
             if (TaskList.SelectedItem == null)
             {
                 MessageBox.Show("Please select a task.");
-
                 return;
             }
 
-            CyberTask selectedTask =
-                (CyberTask)TaskList.SelectedItem;
+            CyberTask task = (CyberTask)TaskList.SelectedItem;
 
             MessageBox.Show(
-                taskManager.MarkAsComplete(selectedTask.Id));
+                taskManager.MarkAsComplete(task.Id));
 
-            LoadTasks();
+            RefreshTasks();
+        }
+
+        private void SubmitAnswer_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(selectedAnswer))
+                return;
+
+            bool correct = quizManager.SubmitAnswer(selectedAnswer);
+
+            if (correct)
+                ResultText.Text = "✅ Correct!";
+            else
+                ResultText.Text = "❌ Incorrect.";
+
+            if (quizManager.IsFinished())
+            {
+                ResultText.Text += "\n\n" + quizManager.GetFinalScore();
+                ResultText.Text += "\n" + quizManager.GetFinalMessage();
+                ActivityLogger.Log("Quiz completed");
+            }
+            else
+            {
+                LoadQuestion();
+            }
+            ActivityLogger.Log($"Quiz answer submitted: {selectedAnswer}");
         }
         private void DeleteTask_Click(object sender, RoutedEventArgs e)
         {
             if (TaskList.SelectedItem == null)
             {
                 MessageBox.Show("Please select a task.");
-
                 return;
             }
 
-            CyberTask selectedTask =
-                (CyberTask)TaskList.SelectedItem;
+            CyberTask task = (CyberTask)TaskList.SelectedItem;
 
             MessageBox.Show(
-                taskManager.DeleteTask(selectedTask.Id));
+                taskManager.DeleteTask(task.Id));
 
+            RefreshTasks();
+        }
+        private void RefreshTasks_Click(object sender, RoutedEventArgs e)
+        {
             LoadTasks();
         }
-        private void RefreshTaskList()
+        private void RefreshLog_Click(object sender, RoutedEventArgs e)
         {
-            TaskListBox.ItemsSource = null;
-            TaskListBox.ItemsSource = taskManager.GetTasks();
+            LogDisplay.Text = ActivityLogger.GetRecentLog();
+        }
+        private void ClearLog_Click(object sender, RoutedEventArgs e)
+        {
+            ActivityLogger.Clear();
+            LogDisplay.Text = "Log cleared.";
         }
     }
 }

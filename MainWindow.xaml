@@ -6,7 +6,8 @@
         Width="950"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
-        Background="#101820">
+        Background="#101820"
+        Loaded="MainWindow_Loaded">
 
     <Window.Resources>
 
@@ -202,10 +203,6 @@
             <!-- TAB 2 : TASK ASSISTANT -->
             <!-- ========================= -->
 
-            <!-- ========================= -->
-            <!-- TAB 2 : TASK ASSISTANT -->
-            <!-- ========================= -->
-
             <TabItem Header="📋 Task Assistant">
 
                 <Grid Margin="20">
@@ -220,8 +217,10 @@
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="130"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="71.426"/>
+                        <ColumnDefinition Width="58.574"/>
+                        <ColumnDefinition Width="107*"/>
+                        <ColumnDefinition Width="265*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- ========================= -->
@@ -229,20 +228,19 @@
                     <!-- ========================= -->
 
                     <TextBlock
-            Grid.Row="0"
             Grid.Column="0"
             Text="Task Title:"
             FontWeight="Bold"
             FontSize="15"
             Foreground="White"
-            VerticalAlignment="Center"/>
+            VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 
                     <TextBox
             x:Name="TaskTitleBox"
             Grid.Row="0"
-            Grid.Column="1"
+            Grid.Column="2"
             Height="35"
-            Margin="10,5"/>
+            Margin="10,5,10,5" Grid.ColumnSpan="2"/>
 
                     <!-- ========================= -->
                     <!-- DESCRIPTION -->
@@ -255,16 +253,16 @@
             FontWeight="Bold"
             FontSize="15"
             Foreground="White"
-            VerticalAlignment="Center"/>
+            VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 
                     <TextBox
             x:Name="TaskDescriptionBox"
             Grid.Row="1"
-            Grid.Column="1"
+            Grid.Column="2"
             Height="70"
-            Margin="10,5"
+            Margin="10,5,10,5"
             AcceptsReturn="True"
-            TextWrapping="Wrap"/>
+            TextWrapping="Wrap" Grid.ColumnSpan="2"/>
 
                     <!-- ========================= -->
                     <!-- REMINDER -->
@@ -277,15 +275,15 @@
             FontWeight="Bold"
             FontSize="15"
             Foreground="White"
-            VerticalAlignment="Center"/>
+            VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 
                     <TextBox
             x:Name="ReminderBox"
             Grid.Row="2"
-            Grid.Column="1"
+            Grid.Column="2"
             Height="35"
-            Margin="10,5"
-            ToolTip="Example: Remind me in 5 days"/>
+            Margin="10,5,10,5"
+            ToolTip="Example: Remind me in 5 days" Grid.ColumnSpan="2"/>
 
                     <!-- ========================= -->
                     <!-- ADD BUTTON -->
@@ -294,25 +292,25 @@
                     <Button
             x:Name="AddTaskButton"
             Grid.Row="3"
-            Grid.ColumnSpan="2"
             Width="180"
             Height="40"
-            Margin="0,15"
-            HorizontalAlignment="Center"
+            Margin="3,15,0,15"
+            HorizontalAlignment="Left"
             Content="➕ Add Task"
-            Click="AddTask_Click"/>
+            Click="AddTask_Click" Grid.Column="3"/>
 
                     <!-- ========================= -->
                     <!-- TASK LIST -->
                     <!-- ========================= -->
 
                     <ListBox
-            x:Name="TaskList"
-            Grid.Row="4"
-            Grid.ColumnSpan="2"
-            Margin="0,15"
-            FontFamily="Consolas"
-            FontSize="14"/>
+                        x:Name="TaskList"
+                        Grid.Row="4"
+                        Grid.ColumnSpan="4"
+                        Margin="0,15,0,15"
+                        FontFamily="Consolas"
+                        FontSize="14"
+                        />
 
                     <!-- ========================= -->
                     <!-- ACTION BUTTONS -->
@@ -320,10 +318,9 @@
 
                     <StackPanel
             Grid.Row="5"
-            Grid.ColumnSpan="2"
             Orientation="Horizontal"
-            HorizontalAlignment="Center"
-            Margin="0,15">
+            HorizontalAlignment="Left"
+            Margin="57,15,0,15" Grid.Column="2" Grid.ColumnSpan="2">
 
                         <Button
                 x:Name="CompleteTaskButton"
@@ -360,18 +357,58 @@
             <!-- ========================= -->
 
             <TabItem Header="🎮 Cybersecurity Quiz">
+                <Grid Margin="20">
 
-                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
+                    <!-- TITLE -->
                     <TextBlock
-                    Text="Quiz coming soon..."
-                    FontSize="24"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+            Text="Cybersecurity Quiz"
+            FontSize="24"
+            FontWeight="Bold"
+            Foreground="White"
+            HorizontalAlignment="Center"
+            Margin="0,0,0,20"/>
+
+                    <!-- QUESTION -->
+                    <TextBlock
+            x:Name="QuestionText"
+            Grid.Row="1"
+            FontSize="18"
+            Foreground="White"
+            TextWrapping="Wrap"
+            Margin="0,10"/>
+
+                    <!-- OPTIONS -->
+                    <StackPanel
+            x:Name="OptionsPanel"
+            Grid.Row="2"
+            Margin="0,10,0,50"/>
+
+                    <!-- SUBMIT BUTTON -->
+                    <Button
+            Grid.Row="3"
+            Content="Submit Answer"
+            Width="180"
+            HorizontalAlignment="Center"
+            Click="SubmitAnswer_Click"/>
+
+                    <!-- RESULT -->
+                    <TextBlock
+            x:Name="ResultText"
+            Grid.Row="4"
+            FontSize="16"
+            Foreground="LightGreen"
+            TextAlignment="Center"
+            Margin="0,10"/>
 
                 </Grid>
-
             </TabItem>
 
             <!-- ========================= -->
@@ -379,19 +416,48 @@
             <!-- ========================= -->
 
             <TabItem Header="📊 Activity Log">
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="219*"/>
+                        <ColumnDefinition Width="218*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto" MinHeight="98.09"/>
+                    </Grid.RowDefinitions>
 
-                    <TextBlock
-                    Text="Activity Log coming soon..."
-                    FontSize="24"
-                    FontWeight="Bold"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+                    <!-- LOG DISPLAY -->
+                    <TextBox
+            x:Name="LogDisplay"
+            Grid.Row="0"
+            IsReadOnly="True"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            FontSize="14"
+            Foreground="White"
+            Background="#222"
+            Margin="0,0,0,10" Grid.ColumnSpan="2"/>
+
+                    <!-- BUTTONS -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="246,10,0,46" Width="436" Grid.Row="1" RenderTransformOrigin="0.361,0.294">
+
+                        <Button
+                Content="Clear Log"
+                Width="176"
+                Click="ClearLog_Click" Height="34"/>
+
+                        <Button
+                Content="Refresh"
+                Width="159"
+                Click="RefreshLog_Click" Height="32"/>
+
+                    </StackPanel>
 
                 </Grid>
 
             </TabItem>
+
 
         </TabControl>
 
