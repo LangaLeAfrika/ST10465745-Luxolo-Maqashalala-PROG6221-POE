@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace CyberBot
 {
@@ -14,34 +15,31 @@ namespace CyberBot
         //=========================================================
         // Objects
         //=========================================================
-
         private readonly ChatBot bot = new ChatBot();
         private readonly TaskManager taskManager = new TaskManager();
         private QuizManager quizManager = new QuizManager();
-        private string selectedAnswer = "";
+        private string selectedAnswer = ""; // kept for UI, but handlers will use quizManager for logic
 
         //=========================================================
         // User Information
         //=========================================================
-
         private bool waitingForName = true;
         private string userName = "";
 
         //=========================================================
         // Constructor
         //=========================================================
-
         public MainWindow()
         {
             InitializeComponent();
-
-            LoadQuestion();// 🔥 THIS loads the first question
+            // initial LoadQuestion moved to Loaded handler to avoid deferred TabItem issues
         }
-            private void RefreshTasks()
-            {
-                TaskList.ItemsSource = null;
-                TaskList.ItemsSource = taskManager.GetAllTasks();
-            }
+
+        private void RefreshTasks()
+        {
+            TaskList.ItemsSource = null;
+            TaskList.ItemsSource = taskManager.GetAllTasks();
+        }
 
         //=========================================================
         // Window Loaded
@@ -49,14 +47,16 @@ namespace CyberBot
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             UserInput.Focus();
-
             await StartupSequence();
             RefreshTasks();
+
+            // ensure quiz UI populated after layout
+            Dispatcher.BeginInvoke(new Action(LoadQuestion), DispatcherPriority.Loaded);
         }
+
         //=========================================================
         // Startup Sequence
         //=========================================================
-
         private async Task StartupSequence()
         {
             PlayGreeting();
@@ -104,7 +104,6 @@ namespace CyberBot
         //=========================================================
         // Greeting Audio
         //=========================================================
-
         private void PlayGreeting()
         {
             try
@@ -128,7 +127,6 @@ namespace CyberBot
         //=========================================================
         // ASCII Banner
         //=========================================================
-
         private void DisplayAsciiArt()
         {
             ChatDisplay.AppendText(@"
@@ -150,7 +148,6 @@ namespace CyberBot
         //=========================================================
         // Welcome Message
         //=========================================================
-
         private void DisplayWelcome()
         {
             ChatDisplay.AppendText(
@@ -159,7 +156,7 @@ namespace CyberBot
                 Your AI Cybersecurity Awareness Assistant.
 
                 I can help you learn about:
-                           
+                            
       🔐 Passwords       🛡 Firewall        🌐 VPN             📧 Email Security 
       🎣 Phishing        🦠 Antivirus       🔒 Encryption      ☁ Cloud Security  
       💀 Malware         🛑 Ransomware      📶 Public Wi-Fi    👤 Identity Theft 
@@ -171,7 +168,6 @@ namespace CyberBot
         //=========================================================
         // Ask User Name
         //=========================================================
-
         private void AskUserName()
         {
             ChatDisplay.AppendText(
@@ -191,7 +187,6 @@ namespace CyberBot
         //=========================================================
         // Enter Key
         //=========================================================
-
         private void UserInput_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -200,12 +195,14 @@ namespace CyberBot
                 SendMessage();
             }
         }
+
         //=========================================================
         // Load Questions
         //=========================================================
         private void LoadQuestion()
         {
             var question = quizManager.GetCurrentQuestion();
+            ResultText.Text = "";
 
             if (question == null)
                 return;
@@ -231,18 +228,18 @@ namespace CyberBot
                 OptionsPanel.Children.Add(rb);
             }
         }
+
         //=========================================================
         // Send Button
         //=========================================================
-
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
             SendMessage();
         }
+
         //=========================================================
         // Send Message
         //=========================================================
-
         private async void SendMessage()
         {
             string message = UserInput.Text.Trim();
@@ -256,7 +253,6 @@ namespace CyberBot
             //-----------------------------------------------------
             // First message = User's Name
             //-----------------------------------------------------
-
             if (waitingForName)
             {
                 userName = message;
@@ -298,26 +294,21 @@ namespace CyberBot
 
                 return;
             }
+
             //-----------------------------------------------------
             // Normal Chat Flow (AFTER name is set)
             //-----------------------------------------------------
-
-            // 🔹 Show user message
             ChatDisplay.AppendText(
             $@"[{DateTime.Now:HH:mm}] 👤 {userName}: {message}
 
 ");
 
-            // 🔹 LOG user message
             ActivityLogger.Log($"[{userName}] said: {message}");
 
-            // 🔹 Get bot reply
             string reply = bot.GetReply(message);
 
-            // 🔹 Small delay for realism
             await Task.Delay(200);
 
-            // 🔹 Show bot reply
             ChatDisplay.AppendText(
             $@"[{DateTime.Now:HH:mm}] 🤖 CyberShield: {reply}
 
@@ -325,16 +316,12 @@ namespace CyberBot
 
 ");
 
-            // 🔹 LOG bot reply
             ActivityLogger.Log($"Bot replied: {reply}");
-
-            // 🔹 Auto scroll
             ChatDisplay.ScrollToEnd();
 
             //-----------------------------------------------------
             // Display User Message
             //-----------------------------------------------------
-
             ChatDisplay.AppendText(
             $@"[{DateTime.Now:HH:mm}] 👤 {userName}
 
@@ -342,18 +329,17 @@ namespace CyberBot
 
             ");
 
-                        ChatDisplay.ScrollToEnd();
+            ChatDisplay.ScrollToEnd();
 
             //-----------------------------------------------------
             // Professional Typing Animation
-            //-----------------------------------------------------
-
-                        ChatDisplay.AppendText(
-            $@"[{DateTime.Now:HH:mm}] 🤖 CyberShield
+            //---------------------------------------------------------
+            ChatDisplay.AppendText(
+$@"[{DateTime.Now:HH:mm}] 🤖 CyberShield
 
             Typing");
 
-               ChatDisplay.ScrollToEnd();
+            ChatDisplay.ScrollToEnd();
 
             for (int i = 0; i < 3; i++)
             {
@@ -367,7 +353,6 @@ namespace CyberBot
             //-----------------------------------------------------
             // Remove Typing Text
             //-----------------------------------------------------
-
             int typingIndex = ChatDisplay.Text.LastIndexOf("Typing");
 
             if (typingIndex >= 0)
@@ -377,7 +362,7 @@ namespace CyberBot
                         typingIndex,
                         ChatDisplay.Text.Length - typingIndex);
             }
-            
+
             // 🔹 NLP Task Detection
             if (message.ToLower().Contains("add task") ||
                 message.ToLower().Contains("remind me") ||
@@ -405,18 +390,19 @@ namespace CyberBot
                     return;
                 }
             }
+
             //-----------------------------------------------------
             // Get ChatBot Response
             //-----------------------------------------------------
-  ActivityLogger.Log("Bot responded to user");
+            ActivityLogger.Log("Bot responded to user");
             ChatDisplay.ScrollToEnd();
 
-             UserInput.Focus();
+            UserInput.Focus();
         }
+
         //=========================================================
         // Clear Chat
         //=========================================================
-
         private async void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show(
@@ -443,8 +429,7 @@ namespace CyberBot
         //=========================================================
         // Exit Button
         //=========================================================
-
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
+       private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show(
                 "Are you sure you want to exit CyberShield Assistant?",
@@ -457,10 +442,12 @@ namespace CyberBot
                 Application.Current.Shutdown();
             }
         }
+
         private void LoadTasks()
         {
             TaskList.ItemsSource = taskManager.GetAllTasks();
         }
+
         private void AddTask_Click(object sender, RoutedEventArgs e)
         {
             string title = TaskTitleBox.Text.Trim();
@@ -486,6 +473,7 @@ namespace CyberBot
 
             RefreshTasks();
         }
+
         private void CompleteTask_Click(object sender, RoutedEventArgs e)
         {
             if (TaskList.SelectedItem == null)
@@ -504,28 +492,64 @@ namespace CyberBot
 
         private void SubmitAnswer_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(selectedAnswer))
+            var selectedOption = OptionsPanel.Children
+                .OfType<RadioButton>()
+                .FirstOrDefault(r => r.IsChecked == true);
+
+            if (selectedOption == null)
+            {
+                ResultText.Text = "⚠ Please select an answer.";
+                return;
+            }
+
+            var currentQuestion = quizManager.GetCurrentQuestion();
+            if (currentQuestion == null)
                 return;
 
-            bool correct = quizManager.SubmitAnswer(selectedAnswer);
+            // Determine the answer text to submit:
+            // - For True/False questions submit "True"/"False"
+            // - For multiple-choice submit the leading letter (A/B/C/D)
+            string raw = selectedOption.Content.ToString();
+            string answerToSubmit = currentQuestion.IsTrueFalse
+                ? raw.Trim()
+                : raw.Length > 0 ? raw.Substring(0, 1).ToUpper() : raw.Trim();
+
+            bool correct = quizManager.SubmitAnswer(answerToSubmit);
 
             if (correct)
-                ResultText.Text = "✅ Correct!";
-            else
-                ResultText.Text = "❌ Incorrect.";
-
-            if (quizManager.IsFinished())
             {
-                ResultText.Text += "\n\n" + quizManager.GetFinalScore();
-                ResultText.Text += "\n" + quizManager.GetFinalMessage();
-                ActivityLogger.Log("Quiz completed");
+                ResultText.Text = "✅ Correct!";
+                ActivityLogger.Log("Quiz: Correct answer");
             }
             else
+            {
+                ResultText.Text = $"❌ Wrong! Correct answer: {currentQuestion.CorrectAnswer}";
+                ActivityLogger.Log("Quiz: Wrong answer");
+            }
+
+            if (!quizManager.IsFinished())
             {
                 LoadQuestion();
             }
-            ActivityLogger.Log($"Quiz answer submitted: {selectedAnswer}");
+            else
+            {
+                ShowFinalScore();
+            }
         }
+
+        private void ShowFinalScore()
+        {
+            QuestionText.Text = "🎉 Quiz Completed!";
+            OptionsPanel.Children.Clear();
+
+            ResultText.Text = quizManager.GetFinalScore();
+
+            ActivityLogger.Log($"Quiz Finished. {quizManager.GetFinalScore()}");
+
+            // Reset manager for next run
+            quizManager.ResetQuiz();
+        }
+
         private void DeleteTask_Click(object sender, RoutedEventArgs e)
         {
             if (TaskList.SelectedItem == null)
@@ -541,14 +565,25 @@ namespace CyberBot
 
             RefreshTasks();
         }
+
+        private void RestartQuiz_Click(object sender, RoutedEventArgs e)
+        {
+            quizManager.ResetQuiz();
+            ResultText.Text = "";
+            LoadQuestion();
+            ActivityLogger.Log("Quiz restarted");
+        }
+
         private void RefreshTasks_Click(object sender, RoutedEventArgs e)
         {
             LoadTasks();
         }
+
         private void RefreshLog_Click(object sender, RoutedEventArgs e)
         {
             LogDisplay.Text = ActivityLogger.GetRecentLog();
         }
+
         private void ClearLog_Click(object sender, RoutedEventArgs e)
         {
             ActivityLogger.Clear();

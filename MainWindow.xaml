@@ -205,7 +205,8 @@
 
             <TabItem Header="📋 Task Assistant">
 
-                <Grid Margin="20">
+                <Grid Margin="20"
+                      Background="#1B263B">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -357,7 +358,13 @@
             <!-- ========================= -->
 
             <TabItem Header="🎮 Cybersecurity Quiz">
-                <Grid Margin="20">
+                <Grid Margin="20"
+                      Background="#1B263B">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="181*"/>
+                        <ColumnDefinition Width="64*"/>
+                        <ColumnDefinition Width="192*"/>
+                    </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -373,8 +380,8 @@
             FontSize="24"
             FontWeight="Bold"
             Foreground="White"
-            HorizontalAlignment="Center"
-            Margin="0,0,0,20"/>
+            HorizontalAlignment="Left"
+            Margin="331,0,0,20" Grid.ColumnSpan="3"/>
 
                     <!-- QUESTION -->
                     <TextBlock
@@ -383,21 +390,27 @@
             FontSize="18"
             Foreground="White"
             TextWrapping="Wrap"
-            Margin="0,10"/>
+            Margin="0,10,0,10" Grid.ColumnSpan="3"/>
 
                     <!-- OPTIONS -->
                     <StackPanel
             x:Name="OptionsPanel"
             Grid.Row="2"
-            Margin="0,10,0,50"/>
+            Margin="0,10,0,50" Grid.ColumnSpan="3"/>
 
                     <!-- SUBMIT BUTTON -->
                     <Button
             Grid.Row="3"
             Content="Submit Answer"
             Width="180"
-            HorizontalAlignment="Center"
-            Click="SubmitAnswer_Click"/>
+            HorizontalAlignment="Left"
+            Click="SubmitAnswer_Click" Grid.ColumnSpan="3" Margin="347,5,0,5"/>
+                    <!-- Restart Quiz BUTTON -->
+                    <Button Content="Restart Quiz"
+        Width="150"
+        HorizontalAlignment="Center"
+        Margin="0,10,0,10"
+        Click="RestartQuiz_Click"/>
 
                     <!-- RESULT -->
                     <TextBlock
@@ -406,7 +419,7 @@
             FontSize="16"
             Foreground="LightGreen"
             TextAlignment="Center"
-            Margin="0,10"/>
+            Margin="0,10,0,10" Grid.ColumnSpan="3"/>
 
                 </Grid>
             </TabItem>
@@ -416,7 +429,8 @@
             <!-- ========================= -->
 
             <TabItem Header="📊 Activity Log">
-                <Grid Margin="20">
+                <Grid Margin="20"
+                      Background="#1B263B">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="219*"/>
                         <ColumnDefinition Width="218*"/>
